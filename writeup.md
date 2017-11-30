@@ -51,6 +51,16 @@ Implementation of Image Recognition Pipeline:
 
 2. Filter out the camera noise with the PCL statistical outlier filter. The adjustable parameters are the number k of neighbouring pixels to average over and the outlier threshold thr = mean_distance + x * std_dev. I used the RViz output image to tune these parameters judging by the visual output. I found that the values k = 8 and x = 0.3 performed best at removing as much noise as possible without deleting content.
 
+    A. Convert the message from a ROS message (which is in PointCloud2 message format) into PCL format for python-pcl using the ros_to_pcl(ros_cloud) function in pcl_helper.py
+    
+    B. Downsample your point cloud by applying a Voxel Grid Filter: vox = cloud.make_voxel_grid_filter()
+    
+    C. Apply a Pass Through Filter to isolate the table and objects.
+    
+    D. Perform RANSAC plane fitting to identify the table.
+
+    E. Use the ExtractIndices Filter to create new point clouds containing the table and objects separately (I'll call them cloud_table and cloud_objects going forward).
+
 3. Downsample the image with a PCL voxel grid filter to reduce processing time and memory consumption. The adjustable parameter is the leaf size which is the side length of the voxel cube to average over. A leaf size of 0.005 seemed a good compromise between gain in computation speed and resolution loss.
 
 4. A passthrough filter to define the region of interest. This filter clips the volume to the specified range. My region of interest is within the range 0.6 < z < 1.1 and 0.34 < x < 1.0 which removes the dropboxes.
