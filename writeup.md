@@ -1,8 +1,6 @@
 ## Project: Perception Pick & Place
-### Writeup Template: You can use this file as a template for your writeup if you want to submit it as a markdown file, but feel free to use some other method and submit a pdf if you prefer.
 
 ---
-
 
 # Required Steps for a Passing Submission:
 1. Extract features and train an SVM model on new objects (see `pick_list_*.yaml` in `/pr2_robot/config/` for the list of models you'll be trying to identify). 
@@ -30,16 +28,47 @@
 ---
 ### Writeup / README
 
-#### 1. Provide a Writeup / README that includes all the rubric points and how you addressed each one.  You can submit your writeup as markdown or pdf.  
-
-You're reading it!
-
 ### Exercise 1, 2 and 3 pipeline implemented
 #### 1. Complete Exercise 1 steps. Pipeline for filtering and RANSAC plane fitting implemented.
 
-#### 2. Complete Exercise 2 steps: Pipeline including clustering for segmentation implemented.  
+Implementation of Image Recognition Pipeline:
+
+1. Convert the point cloud which is passed in as a ROS message to PCL format.
+
+```python
+# Import PCL module
+import pcl
+
+# Load Point Cloud file
+cloud = pcl.load_XYZRGB('tabletop.pcd')
+
+LEAF_SIZE = .01   
+vox.set_leaf_size(LEAF_SIZE, LEAF_SIZE, LEAF_SIZE)
+```
+
+2. Filter out the camera noise with the PCL statistical outlier filter. The adjustable parameters are the number k of neighbouring pixels to average over and the outlier threshold thr = mean_distance + x * std_dev. I used the RViz output image to tune these parameters judging by the visual output. I found that the values k = 8 and x = 0.3 performed best at removing as much noise as possible without deleting content.
+
+3. Downsample the image with a PCL voxel grid filter to reduce processing time and memory consumption. The adjustable parameter is the leaf size which is the side length of the voxel cube to average over. A leaf size of 0.005 seemed a good compromise between gain in computation speed and resolution loss.
+
+4. A passthrough filter to define the region of interest. This filter clips the volume to the specified range. My region of interest is within the range 0.6 < z < 1.1 and 0.34 < x < 1.0 which removes the dropboxes.
+
+5. RANSAC plane segmentation in order to separate the table from the objects on it. A maximum threshold of 0.01 worked well to fit the geometric plane model. The cloud is then segmented in two parts the table (inliers) and the objects of interest (outliers). The segments are published to ROS as /pcl_table and /pcl_objects. From this point onwards the objects segment of the point cloud is used for further processing.
+
+#### 2. Complete Exercise 2 steps: Pipeline including clustering for segmentation implemented.
+
+In order to detect individual objects, the point cloud needs to be clustered.
+
+Following the lectures I applied Euclidean clustering. The parameters that worked best for me are a cluster tolerance of 0.02, a minimum cluster size of 40 and a maximum cluster size of 4000. The optimal values for Euclidean clustering depend on the leaf size defined above, since the voxel grid determines the point density in the image.
+
+The search method is k-d tree, which is appropriate here since the objects are well separated the x and y directions (e.g seen when rotating the RViz view parallel to z-axis).
+
+The clusters are colored for visualization in RViz, the corresponding ROS subject is /pcl_cluster.
+
+The next part of the pipeline handles the actual object recognition using machine learning.
 
 #### 2. Complete Exercise 3 Steps.  Features extracted and SVM trained.  Object recognition implemented.
+
+
 Here is an example of how to include an image in your writeup.
 
 ![demo-1](https://user-images.githubusercontent.com/20687560/28748231-46b5b912-7467-11e7-8778-3095172b7b19.png)
