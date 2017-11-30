@@ -34,13 +34,20 @@
 Implementation of Image Recognition Pipeline:
 
 1. Convert the point cloud which is passed in as a ROS message to PCL format.
-A. Initialized ROS node
-B. Created Subscriber for the point cloud topic using pcl_callback()
-C. Created two publishers for the point cloud data for the table and the objects on the table to topics called pcl_table and pcl_objects
-D. Spin while node is not shutdown
-E. Publish ROS messages from your pcl_callback()
-F. Relaunched segmentation.py via ./segmentation.py
-G. Topics /pcl_objects and /pcl_table successfully showed up in RViz.
+
+  A. Initialized ROS node
+
+  B. Created Subscriber for the point cloud topic using pcl_callback()
+  
+  C. Created two publishers for the point cloud data for the table and the objects on the table to topics called pcl_table and pcl_objects
+  
+  D. Spin while node is not shutdown
+  
+  E. Publish ROS messages from your pcl_callback()
+  
+  F. Relaunched segmentation.py via ./segmentation.py
+  
+  G. Topics /pcl_objects and /pcl_table successfully showed up in RViz.
 
 2. Filter out the camera noise with the PCL statistical outlier filter. The adjustable parameters are the number k of neighbouring pixels to average over and the outlier threshold thr = mean_distance + x * std_dev. I used the RViz output image to tune these parameters judging by the visual output. I found that the values k = 8 and x = 0.3 performed best at removing as much noise as possible without deleting content.
 
