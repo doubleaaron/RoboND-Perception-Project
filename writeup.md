@@ -76,7 +76,9 @@ Implementation of Image Recognition Pipeline:
     ```
     
     C. Apply a Pass Through Filter to isolate the table and objects. Pass Through Filtering trims down our point cloud space along specified axes, in order to decrease the sample size. We will allow a specific region (ROI) to Pass Through. Pass Through Filtering can be thought of as cropping a 3 dimensional space. I found a min/max of 0.6 and 1.1 to work fairly well for the table top.
-    ![voxelgrid](https://github.com/doubleaaron/RoboND-Perception-Project/blob/master/images/statistical-outlier-removal-cropped.png)
+    
+    ![passthroughfilter](https://github.com/doubleaaron/RoboND-Perception-Project/blob/master/images/statistical-outlier-removal-cropped.png)
+    
     ```python
     # PassThrough Filter
     passthrough = cloud_filtered.make_passthrough_filter()
@@ -101,6 +103,9 @@ Implementation of Image Recognition Pipeline:
     ```
     
     D. Perform RANSAC plane fitting to identify the table.
+    
+    ![planesegmentation](https://github.com/doubleaaron/RoboND-Perception-Project/blob/master/images/segmentation.jpg)
+    
     ```python
     # RANSAC Plane Segmentation
     seg = cloud_filtered.make_segmenter()
