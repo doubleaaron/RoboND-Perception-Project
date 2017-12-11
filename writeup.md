@@ -1,5 +1,7 @@
 ## Project: Perception Pick & Place
 
+![headerimage](https://github.com/doubleaaron/RoboND-Perception-Project/blob/master/images/pr2_header.jpg)
+
 ---
 
 # Required Steps for a Passing Submission:
