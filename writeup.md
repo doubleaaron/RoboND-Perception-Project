@@ -25,24 +25,78 @@ Implementation of Image Recognition Pipeline:
     ```
     
     B. Created Subscriber for the point cloud topic using pcl_callback()
+    ```
+    # Create Subscribers
+    pcl_sub = rospy.Subscriber("/sensor_stick/point_cloud", pc2.PointCloud2, pcl_callback, queue_size=1)
+    ```
     
     C. Created two publishers for the point cloud data for the table and the objects on the table to topics called pcl_table and pcl_objects
+    ```
+    # Create Publishers
+    pcl_objects_pub = rospy.Publisher("/pcl_objects", PointCloud2, queue_size=1)
+    pcl_table_pub = rospy.Publisher("/pcl_table", PointCloud2, queue_size=1)
+    ```
     
     D. Spin while node is not shutdown
-    
+    ```
+    # Spin while node is not shutdown
+while not rospy.is_shutdown():
+    rospy.spin()
+    ```
     E. Publish ROS messages from your pcl_callback()
+    ```
+    # Publish ROS messages
+    pcl_objects_pub.publish(ros_cloud_objects)
+    pcl_table_pub.publish(ros_cloud_table)
+    pcl_cluster_pub.publish(ros_cluster_cloud)
+    ```
     
-    F. Relaunched segmentation.py via ./segmentation.py
+    F. Put code into segmentation.py
     
-    G. Topics /pcl_objects and /pcl_table successfully showed up in RViz.
+    G. Verified that the topics /pcl_objects and /pcl_table successfully showed up in RViz interface.
 
-2. Filter out the camera noise with the PCL statistical outlier filter. The adjustable parameters are the number k of neighbouring pixels to average over and the outlier threshold thr = mean_distance + x * std_dev. I used the RViz output image to tune these parameters judging by the visual output. I found that the values k = 8 and x = 0.3 performed best at removing as much noise as possible without deleting content.
+2. Filtering: Filter out the camera noise with the PCL statistical outlier filter. The adjustable parameters are the number k of neighbouring pixels to average over and the outlier threshold thr = mean_distance + x * std_dev. I used the RViz output image to tune these parameters judging by the visual output. I found that the values k = 8 and x = 0.3 performed best at removing as much noise as possible without deleting content.
 
     A. Convert the message from a ROS message (which is in PointCloud2 message format) into PCL format for python-pcl using the ros_to_pcl(ros_cloud) function in pcl_helper.py
+    ```
+    # Convert ROS msg to PCL data
+    cloud = ros_to_pcl(pcl_msg)
+    ```
     
     B. Downsample your point cloud by applying a Voxel Grid Filter: vox = cloud.make_voxel_grid_filter()
+    ```
+    # Voxel Grid Downsampling
+    vox = cloud.make_voxel_grid_filter()
+    LEAF_SIZE = .01
+    vox.set_leaf_size(LEAF_SIZE, LEAF_SIZE, LEAF_SIZE)
+    cloud_filtered = vox.filter()
+    filename = 'voxel_downsampled.pcd'
+    pcl.save(cloud_filtered, filename)
+    ```
     
-    C. Apply a Pass Through Filter to isolate the table and objects.
+    C. Apply a Pass Through Filter to isolate the table and objects. I found a min/max of 0.6 and 1.1 to work fairly well for the table top.
+    ```
+    # PassThrough Filter
+    passthrough = cloud_filtered.make_passthrough_filter()
+    
+    # Assign axis and range to the passthrough filter object.
+    filter_axis = 'x'
+    passthrough.set_filter_field_name(filter_axis)
+    axis_min = 0.4
+    axis_max = 3.
+    passthrough.set_filter_limits(axis_min, axis_max)
+
+    filter_axis = 'z'
+    passthrough.set_filter_field_name(filter_axis)
+    axis_min = 0.6
+    axis_max = 1.1
+    passthrough.set_filter_limits(axis_min, axis_max)
+
+    # Finally use the filter function to obtain the resultant point cloud. 
+    cloud_filtered = passthrough.filter()
+    filename = 'pass_through_filtered.pcd'
+    pcl.save(cloud_filtered, filename)
+    ```
     
     D. Perform RANSAC plane fitting to identify the table.
 
