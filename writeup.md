@@ -99,8 +99,37 @@ while not rospy.is_shutdown():
     ```
     
     D. Perform RANSAC plane fitting to identify the table.
+    ```python
+    # RANSAC Plane Segmentation
+    seg = cloud_filtered.make_segmenter()
+    # Set the model you wish to fit 
+    seg.set_model_type(pcl.SACMODEL_PLANE)
+    seg.set_method_type(pcl.SAC_RANSAC)
+
+    # Max distance for a point to be considered fitting the model
+    max_distance = 0.01
+    seg.set_distance_threshold(max_distance)
+
+    # Segment Function to obtain set of inlier indices/model coeffs
+    inliers, coefficients = seg.segment()
+    outliers, coefficients = seg.segment()
+    ```
 
     E. Use the ExtractIndices Filter to create new point clouds containing the table and objects separately (I'll call them cloud_table and cloud_objects going forward).
+    ```python
+    # Extract inliers and outliers
+    extracted_inliers = cloud_filtered.extract(inliers, negative=False)
+    filename = 'extracted_inliers.pcd'
+    pcl.save(extracted_inliers, filename)
+
+    # Extract outliers
+    extracted_outliers = cloud_filtered.extract(outliers, negative=True)
+    filename = 'extracted_outliers.pcd'
+    pcl.save(extracted_outliers, filename)
+
+    cloud_table = extracted_inliers
+    cloud_objects = extracted_outliers
+    ```
 
 3. Downsample the image with a PCL voxel grid filter to reduce processing time and memory consumption. The adjustable parameter is the leaf size which is the side length of the voxel cube to average over. A leaf size of 0.005 seemed a good compromise between gain in computation speed and resolution loss.
 
