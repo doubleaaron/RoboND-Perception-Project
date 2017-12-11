@@ -30,11 +30,10 @@
 
 In this project, you must assimilate your work from previous exercises to successfully complete a tabletop pick and place operation using PR2 and it's (RGB+Depth) camera.
 
-The purpose of this Project is given the cluttered tabletop scenario, you must implement a perception pipeline using your work from Perception Exercises 1,2 and 3 to identify target objects from a so-called “Pick-List” in that particular order, pick up those objects and place them in corresponding dropboxes. The PR2 has been outfitted with an RGB-D sensor much like the one you used in previous exercises. This sensor however is a bit noisy, much like real sensors, so you must employ Statistical Outlier removal filtering in PCL to remove this real world noise.
+The purpose of this Project is that given the cluttered tabletop scenario, you must implement a perception pipeline using your work from Perception Exercises 1,2 and 3 to identify target objects from a so-called “Pick-List” in that particular order, pick up those objects and place them in corresponding dropboxes with the PR2 robot. The PR2 has been outfitted with an RGB-D sensor much like the one you used in previous exercises. This sensor however is a bit noisy, much like real sensors, so you must employ Statistical Outlier removal filtering in PCL to remove this real world noise.
 
 
-
-### Exercise 1, 2 and 3 pipeline implemented
+### Exercise 1, 2 and 3 pipeline implemented in [perception_pipeline.py](https://github.com/doubleaaron/RoboND-Perception-Project/blob/master/pr2_robot/scripts/perception_pipeline.py)
 #### 1. Complete Exercise 1 steps. Pipeline for filtering and RANSAC plane fitting implemented.
 
 Implementation of Image Recognition Pipeline:
