@@ -25,26 +25,26 @@ Implementation of Image Recognition Pipeline:
     ```
     
     B. Created Subscriber for the point cloud topic using pcl_callback()
-    ```
+    ```python
     # Create Subscribers
     pcl_sub = rospy.Subscriber("/sensor_stick/point_cloud", pc2.PointCloud2, pcl_callback, queue_size=1)
     ```
     
     C. Created two publishers for the point cloud data for the table and the objects on the table to topics called pcl_table and pcl_objects
-    ```
+    ```python
     # Create Publishers
     pcl_objects_pub = rospy.Publisher("/pcl_objects", PointCloud2, queue_size=1)
     pcl_table_pub = rospy.Publisher("/pcl_table", PointCloud2, queue_size=1)
     ```
     
     D. Spin while node is not shutdown
-    ```
+    ```python
     # Spin while node is not shutdown
 while not rospy.is_shutdown():
     rospy.spin()
     ```
     E. Publish ROS messages from your pcl_callback()
-    ```
+    ```python
     # Publish ROS messages
     pcl_objects_pub.publish(ros_cloud_objects)
     pcl_table_pub.publish(ros_cloud_table)
@@ -58,13 +58,13 @@ while not rospy.is_shutdown():
 2. Filtering: Filter out the camera noise with the PCL statistical outlier filter. The adjustable parameters are the number k of neighbouring pixels to average over and the outlier threshold thr = mean_distance + x * std_dev. I used the RViz output image to tune these parameters judging by the visual output. I found that the values k = 8 and x = 0.3 performed best at removing as much noise as possible without deleting content.
 
     A. Convert the message from a ROS message (which is in PointCloud2 message format) into PCL format for python-pcl using the ros_to_pcl(ros_cloud) function in pcl_helper.py
-    ```
+    ```python
     # Convert ROS msg to PCL data
     cloud = ros_to_pcl(pcl_msg)
     ```
     
     B. Downsample your point cloud by applying a Voxel Grid Filter: vox = cloud.make_voxel_grid_filter()
-    ```
+    ```python
     # Voxel Grid Downsampling
     vox = cloud.make_voxel_grid_filter()
     LEAF_SIZE = .01
@@ -75,7 +75,7 @@ while not rospy.is_shutdown():
     ```
     
     C. Apply a Pass Through Filter to isolate the table and objects. I found a min/max of 0.6 and 1.1 to work fairly well for the table top.
-    ```
+    ```python
     # PassThrough Filter
     passthrough = cloud_filtered.make_passthrough_filter()
     
