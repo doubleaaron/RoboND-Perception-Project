@@ -40,7 +40,7 @@ Implementation of Image Recognition Pipeline:
     D. Spin while node is not shutdown
     ```python
     # Spin while node is not shutdown
-while not rospy.is_shutdown():
+    while not rospy.is_shutdown():
     rospy.spin()
     ```
     E. Publish ROS messages from your pcl_callback()
