@@ -19,7 +19,7 @@ Implementation of Image Recognition Pipeline:
 1. Convert the point cloud which is passed in as a ROS message to PCL format.
     
     A. Initialized ROS node
-    ```
+    ```python
     # ROS node initialization
     rospy.init_node('clustering', anonymous=True)
     ```
