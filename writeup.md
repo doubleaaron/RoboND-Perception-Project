@@ -63,7 +63,8 @@ Implementation of Image Recognition Pipeline:
     cloud = ros_to_pcl(pcl_msg)
     ```
     
-    B. Downsample your point cloud by applying a Voxel Grid Filter: vox = cloud.make_voxel_grid_filter()
+    B. Downsample your point cloud by applying a Voxel Grid Filter:
+    ![voxelgrid](https://github.com/doubleaaron/RoboND-Perception-Project/blob/master/images/voxel_grid.jpg)
     ```python
     # Voxel Grid Downsampling
     vox = cloud.make_voxel_grid_filter()
@@ -75,6 +76,7 @@ Implementation of Image Recognition Pipeline:
     ```
     
     C. Apply a Pass Through Filter to isolate the table and objects. Pass Through Filtering trims down our point cloud space along specified axes, in order to decrease the sample size. We will allow a specific region (ROI) to Pass Through. Pass Through Filtering can be thought of as cropping a 3 dimensional space. I found a min/max of 0.6 and 1.1 to work fairly well for the table top.
+    ![voxelgrid](https://github.com/doubleaaron/RoboND-Perception-Project/blob/master/images/statistical-outlier-removal-cropped.png)
     ```python
     # PassThrough Filter
     passthrough = cloud_filtered.make_passthrough_filter()
