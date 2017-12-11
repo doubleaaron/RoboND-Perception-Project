@@ -74,10 +74,28 @@ while not rospy.is_shutdown():
     pcl.save(cloud_filtered, filename)
     ```
     
-    C. Apply a Pass Through Filter to isolate the table and objects. I found a min/max of 0.6 and 1.1 to work fairly well for the table top.
+    C. Apply a Pass Through Filter to isolate the table and objects. Pass Through Filtering trims down our point cloud space along specified axes, in order to decrease the sample size. We will allow a specific region (ROI) to Pass Through. Pass Through Filtering can be thought of as cropping a 3 dimensional space. I found a min/max of 0.6 and 1.1 to work fairly well for the table top.
     ```python
     # PassThrough Filter
     passthrough = cloud_filtered.make_passthrough_filter()
+    
+    # Assign axis and range to the passthrough filter object.
+    filter_axis = 'x'
+    passthrough.set_filter_field_name(filter_axis)
+    axis_min = 0.4
+    axis_max = 3.
+    passthrough.set_filter_limits(axis_min, axis_max)
+
+    filter_axis = 'z'
+    passthrough.set_filter_field_name(filter_axis)
+    axis_min = 0.6
+    axis_max = 1.1
+    passthrough.set_filter_limits(axis_min, axis_max)
+
+    # Finally use the filter function to obtain the resultant point cloud. 
+    cloud_filtered = passthrough.filter()
+    filename = 'pass_through_filtered.pcd'
+    pcl.save(cloud_filtered, filename)
     ```
     
     D. Perform RANSAC plane fitting to identify the table.
