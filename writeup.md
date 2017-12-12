@@ -284,8 +284,8 @@ Then we'll add the histogram, computer features, concatenate and normalize them.
     return normed_features
  ```
  
-![tconfusionmatrix01](https://github.com/doubleaaron/RoboND-Perception-Project/blob/master/images/trained_confusion_matrix_01.jpg)
-![tconfusionmatrix02](https://github.com/doubleaaron/RoboND-Perception-Project/blob/master/images/trained_confusion_matrix_02.jpg)
+![tconfusionmatrix01](https://github.com/doubleaaron/RoboND-Perception-Project/blob/master/images/trained_confusion_matrix_03.jpg)
+![tconfusionmatrix02](https://github.com/doubleaaron/RoboND-Perception-Project/blob/master/images/trained_confusion_matrix_04.jpg)
 
 The next things we can work on are:
 
