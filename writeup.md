@@ -164,7 +164,8 @@ Following the lectures I applied Euclidean clustering. The parameters that worke
     ec.set_MinClusterSize(30)
     ec.set_MaxClusterSize(1200)
 ```
-
+    ![clustering](https://github.com/doubleaaron/RoboND-Perception-Project/blob/master/images/rviz_euclidean_clustering.png)
+    
 The search method is k-d tree, which is appropriate here since the objects are well separated the x and y directions (e.g seen when rotating the RViz view parallel to z-axis).
 
 ```python
@@ -193,6 +194,7 @@ color_cluster_point_list = []
                                             rgb_to_float(cluster_color[j])])
 
 ```
+    ![clusteringcolors](https://github.com/doubleaaron/RoboND-Perception-Project/blob/master/images/rviz_euclidean_clustering_colors.png)
 
 The next part of the pipeline handles the actual object recognition using machine learning.
 
