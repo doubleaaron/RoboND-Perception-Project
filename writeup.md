@@ -51,9 +51,7 @@ Implementation of Image Recognition Pipeline:
     pcl_cluster_pub.publish(ros_cluster_cloud)
     ```
     
-    F. Put code into segmentation.py
-    
-    G. Verified that the topics /pcl_objects and /pcl_table successfully showed up in RViz interface.
+    F. Verified that the topics /pcl_objects and /pcl_table successfully showed up in RViz interface.
 
 2. Filtering: Filter out the camera noise with the PCL statistical outlier filter. The adjustable parameters are the number k of neighbouring pixels to average over and the outlier threshold thr = mean_distance + x * std_dev. I used the RViz output image to tune these parameters judging by the visual output. I found that the values k = 8 and x = 0.3 performed best at removing as much noise as possible without deleting content.
 
