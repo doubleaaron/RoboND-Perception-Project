@@ -63,7 +63,8 @@ Implementation of Image Recognition Pipeline:
     cloud = ros_to_pcl(pcl_msg)
     ```
     
-    B. Downsample your point cloud by applying a Voxel Grid Filter:
+    B. Downsample your point cloud by applying a Voxel Grid Filter: Downsampling decreases the density of the pointcloud that is output from the RGB-D camera. RGBD cameras provide feature rich pointclouds and are computationally expensive. Downsampling decreases the resolution of a three dimensional point cloud. A LEAF_SIZE of .01 is what I ended up using.
+    
     ![voxelgrid](https://github.com/doubleaaron/RoboND-Perception-Project/blob/master/images/voxel_grid.jpg)
     ```python
     # Voxel Grid Downsampling
