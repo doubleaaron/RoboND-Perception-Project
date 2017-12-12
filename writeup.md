@@ -198,7 +198,7 @@ color_cluster_point_list = []
 
 ![clusteringcolors](https://github.com/doubleaaron/RoboND-Perception-Project/blob/master/images/rviz_euclidean_clustering_colors.png)
 
-The next part of the pipeline handles the actual object recognition using machine learning.
+The next part of the pipeline handles the actual object recognition using machine learning with scikit-learn.
 
 #### 2. Complete Exercise 3 Steps.  Features extracted and SVM trained.  Object recognition implemented.
 
@@ -206,8 +206,11 @@ Both compute_color_histograms() and compute_normal_histograms() prior to trainin
 
 ![confusionmatrix01](https://github.com/doubleaaron/RoboND-Perception-Project/blob/master/images/confusion_matrix_01.jpg)
 ![confusionmatrix02](https://github.com/doubleaaron/RoboND-Perception-Project/blob/master/images/confusion_matrix_02.jpg)
+
+Not good on the confusion matrix front, since compute_color_histograms() and compute_normal_histograms() in the features.py file aren't filled out. We need to do some RGB color analysis on the point cloud.
+
  ```python
- def compute_color_histograms(cloud, using_hsv=False):
+ def compute_color_histograms(cloud, using_hsv=True):
 
     # Compute histograms for the clusters
     point_colors_list = []
@@ -230,22 +233,25 @@ Both compute_color_histograms() and compute_normal_histograms() prior to trainin
         channel_2_vals.append(color[1])
         channel_3_vals.append(color[2])
     
+    # Compute histograms of color values (Color channels Range from 0 to 256(8 bit))
+    nbins=32
+    bins_range=(0,256)
+    
     # Compute histograms
-    nbins = 64
-    bins_range = (0, 256)
-    channel_1_hist = np.histogram(channel_1_vals, bins=nbins, range=bins_range)
-    channel_2_hist = np.histogram(channel_2_vals, bins=nbins, range=bins_range)
-    channel_3_hist = np.histogram(channel_3_vals, bins=nbins, range=bins_range)
-
+    r_hist = np.histogram(channel_1_vals, bins=nbins, range=bins_range)
+    g_hist = np.histogram(channel_2_vals, bins=nbins, range=bins_range)
+    b_hist = np.histogram(channel_3_vals, bins=nbins, range=bins_range)
+    
+    # Extract the features
     # Concatenate and normalize the histograms
-    hist_features = np.concatenate((channel_1_hist[0], channel_2_hist[0], channel_3_hist[0])).astype(np.float64)
+    hist_features = np.concatenate((r_hist[0], g_hist[0], b_hist[0])).astype(np.float64)
+    normed_features = hist_features / np.sum(hist_features)  
 
-    # Generate random features for demo mode.  
-    normed_features = hist_features / np.sum(hist_features)
-
-    return normed_features 
+    return normed_features
 
  ```
+ 
+Then we'll add the histogram, computer features, concatenate and normalize them. Normailizing here is in the -1 to 1 range unlike color which is 0-255.
  
  ```python
  def compute_normal_histograms(normal_cloud):
@@ -260,18 +266,20 @@ Both compute_color_histograms() and compute_normal_histograms() prior to trainin
         norm_y_vals.append(norm_component[1])
         norm_z_vals.append(norm_component[2])
 
-    # Compute histograms of normal values (just like with color)
-    nbins = 3
-    bins_range = (-1, 1)
-    norm_x_hist = np.histogram(norm_x_vals, bins=nbins, range=bins_range)
-    norm_y_hist = np.histogram(norm_y_vals, bins=nbins, range=bins_range)
-    norm_z_hist = np.histogram(norm_z_vals, bins=nbins, range=bins_range)
+    # Compute histograms of surface normal values (Surface Normals Range from -1 to 1)
+    nbins= 32
+    bins_range=(-1,1)
 
+    # Compute histograms
+    x_hist = np.histogram(norm_x_vals, bins=nbins, range=bins_range)
+    y_hist = np.histogram(norm_y_vals, bins=nbins, range=bins_range)
+    z_hist = np.histogram(norm_z_vals, bins=nbins, range=bins_range)
+    
+    # TODO: Concatenate and normalize the histograms
+    # Extract the features
     # Concatenate and normalize the histograms
-    hist_features = np.concatenate((norm_x_hist[0], norm_y_hist[0], norm_z_hist[0])).astype(np.float64)
-
-    # Generate random features for demo mode.  
-    normed_features = hist_features / np.sum(hist_features)
+    hist_features = np.concatenate((x_hist[0], y_hist[0], z_hist[0])).astype(np.float64)
+    normed_features = hist_features / np.sum(hist_features)  
 
     return normed_features
  ```
