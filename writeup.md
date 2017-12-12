@@ -287,6 +287,38 @@ Then we'll add the histogram, computer features, concatenate and normalize them.
 ![tconfusionmatrix01](https://github.com/doubleaaron/RoboND-Perception-Project/blob/master/images/trained_confusion_matrix_01.jpg)
 ![tconfusionmatrix02](https://github.com/doubleaaron/RoboND-Perception-Project/blob/master/images/trained_confusion_matrix_02.jpg)
 
+The next things we can work on are:
+
+    Convert RGB to HSV
+    Compute features for a larger set of random orientations of the objects
+    Try different binning schemes with the histogram(32,64, etc)
+    Modify the SVM parameters(kernel, regularization, etc)
+
+Convert RGB to HSV:
+Within the capture_features.py file change the value of using_hsv=False to True
+```python
+chists = compute_color_histograms(sample_cloud, using_hsv=False)
+```
+
+Randomly Spawn more objects in the capture_features.py (for loop) for i in range(5):
+```python
+for i in range(30)
+```
+
+For binning schemes I settled on 32:
+bins=32
+
+Within train_svm.py I messed around with the SVM kernels available in scikit:
+linear,rbf,sigmoid
+
+Some other ideas would be to use some different Classifiers in scikit like ExtraTrees or GradientBoosting:
+
+clf = ExtraTreesClassifier(n_estimators=10, max_depth=None,
+                           min_samples_split=2, random_state=0)
+                           
+clf = GradientBoostingClassifier(n_estimators=10, learning_rate=1.0,
+                                 max_depth=1, random_state=0).fit(X_train, y_train)
+
 Here is an example of how to include an image in your writeup.
 
 ![demo-1](https://user-images.githubusercontent.com/20687560/28748231-46b5b912-7467-11e7-8778-3095172b7b19.png)
