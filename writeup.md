@@ -158,15 +158,11 @@ Following the lectures I applied Euclidean clustering. The parameters that worke
     
     # Set tolerances for distance threshold 
     # as well as minimum and maximum cluster size (in points)
-    # NOTE: These are poor choices of clustering parameters
+    
     # Your task is to experiment and find values that work for segmenting objects.
     ec.set_ClusterTolerance(0.03)
     ec.set_MinClusterSize(30)
     ec.set_MaxClusterSize(1200)
-    # Search the k-d tree for clusters
-    ec.set_SearchMethod(tree)
-    # Extract indices for each of the discovered clusters
-    cluster_indices = ec.Extract()
 ```
 
 The search method is k-d tree, which is appropriate here since the objects are well separated the x and y directions (e.g seen when rotating the RViz view parallel to z-axis).
