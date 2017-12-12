@@ -201,7 +201,10 @@ color_cluster_point_list = []
 The next part of the pipeline handles the actual object recognition using machine learning.
 
 #### 2. Complete Exercise 3 Steps.  Features extracted and SVM trained.  Object recognition implemented.
-
+![confusionmatrix01](https://github.com/doubleaaron/RoboND-Perception-Project/blob/master/images/confusion_matrix_01.jpg)
+![confusionmatrix02](https://github.com/doubleaaron/RoboND-Perception-Project/blob/master/images/confusion_matrix_02.jpg)
+![tconfusionmatrix01](https://github.com/doubleaaron/RoboND-Perception-Project/blob/master/images/trained_confusion_matrix_01.jpg)
+![tconfusionmatrix02](https://github.com/doubleaaron/RoboND-Perception-Project/blob/master/images/trained_confusion_matrix_02.jpg)
 
 Here is an example of how to include an image in your writeup.
 
