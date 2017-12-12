@@ -130,48 +130,6 @@ Implementation of Image Recognition Pipeline:
     cloud_objects = extracted_outliers
     ```
 
-3. Downsample the image with a PCL voxel grid filter to reduce processing time and memory consumption. The adjustable parameter is the leaf size which is the side length of the voxel cube to average over. A leaf size of 0.005 seemed a good compromise between gain in computation speed and resolution loss.
-```python
-# Voxel Grid Downsampling
-    vox = cloud.make_voxel_grid_filter()
-    LEAF_SIZE = .01
-    vox.set_leaf_size(LEAF_SIZE, LEAF_SIZE, LEAF_SIZE)
-    cloud_filtered = vox.filter()
-    filename = 'voxel_downsampled.pcd'
-    pcl.save(cloud_filtered, filename)
-```
-
-4. A passthrough filter to define the region of interest. This filter clips the volume to the specified range. My region of interest is within the range 0.6 < z < 1.1 and 0.34 < x < 1.0 which removes the dropboxes.
-```python
- # Assign axis and range to the passthrough filter object.
-    filter_axis = 'x'
-    passthrough.set_filter_field_name(filter_axis)
-    axis_min = 0.4
-    axis_max = 3.
-    passthrough.set_filter_limits(axis_min, axis_max)
-
-    filter_axis = 'z'
-    passthrough.set_filter_field_name(filter_axis)
-    axis_min = 0.6
-    axis_max = 1.1
-    passthrough.set_filter_limits(axis_min, axis_max)
-
-    # Finally use the filter function to obtain the resultant point cloud. 
-    cloud_filtered = passthrough.filter()
-    filename = 'pass_through_filtered.pcd'
-    pcl.save(cloud_filtered, filename)
-```
-
-5. RANSAC plane segmentation in order to separate the table from the objects on it. A maximum threshold of 0.01 worked well to fit the geometric plane model. The cloud is then segmented in two parts the table (inliers) and the objects of interest (outliers). The segments are published to ROS as /pcl_table and /pcl_objects. From this point onwards the objects segment of the point cloud is used for further processing.
-```python
-# Max distance for a point to be considered fitting the model
-    max_distance = 0.01
-    seg.set_distance_threshold(max_distance)
-
-    # Segment Function to obtain set of inlier indices/model coeffs
-    inliers, coefficients = seg.segment()
-    outliers, coefficients = seg.segment()
-```
 
 #### 2. Complete Exercise 2 steps: Pipeline including clustering for segmentation implemented.
 
