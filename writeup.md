@@ -143,11 +143,52 @@ Implementation of Image Recognition Pipeline:
 
 In order to detect individual objects, the point cloud needs to be clustered.
 
-Following the lectures I applied Euclidean clustering. The parameters that worked best for me are a cluster tolerance of 0.02, a minimum cluster size of 40 and a maximum cluster size of 4000. The optimal values for Euclidean clustering depend on the leaf size defined above, since the voxel grid determines the point density in the image.
+Following the lectures I applied Euclidean clustering. The parameters that worked best for me are a cluster tolerance of 0.03, a minimum cluster size of 30 and a maximum cluster size of 1200. The optimal values for Euclidean clustering depend on the leaf size defined above, since the voxel grid determines the point density in the image.
+
+    ```python
+    # Euclidean Clustering
+    white_cloud = XYZRGB_to_XYZ(cloud_objects)
+    tree = white_cloud.make_kdtree()
+
+
+
+    # Create Cluster-Mask Point Cloud to visualize each cluster separately
+    # Create a cluster extraction object
+    ec = white_cloud.make_EuclideanClusterExtraction()
+    
+    # Set tolerances for distance threshold 
+    # as well as minimum and maximum cluster size (in points)
+    # NOTE: These are poor choices of clustering parameters
+    # Your task is to experiment and find values that work for segmenting objects.
+    ec.set_ClusterTolerance(0.03)
+    ec.set_MinClusterSize(30)
+    ec.set_MaxClusterSize(1200)
+    ```
 
 The search method is k-d tree, which is appropriate here since the objects are well separated the x and y directions (e.g seen when rotating the RViz view parallel to z-axis).
 
+    ```python
+    # Search the k-d tree for clusters
+    ec.set_SearchMethod(tree)
+    # Extract indices for each of the discovered clusters
+    cluster_indices = ec.Extract()
+    ```
+
 The clusters are colored for visualization in RViz, the corresponding ROS subject is /pcl_cluster.
+    ```python
+    # Create a Cluster Visualization using PointCloud_PointXYZRGB
+    # Create Cluster-Mask Point Cloud to visualize each cluster separately
+    cluster_color = get_color_list(len(cluster_indices))
+
+    color_cluster_point_list = []
+
+    for j, indices in enumerate(cluster_indices):
+        for i, indice in enumerate(indices):
+            color_cluster_point_list.append([white_cloud[indice][0],
+                                            white_cloud[indice][1],
+                                            white_cloud[indice][2],
+                                            rgb_to_float(cluster_color[j])])
+    ```
 
 The next part of the pipeline handles the actual object recognition using machine learning.
 
