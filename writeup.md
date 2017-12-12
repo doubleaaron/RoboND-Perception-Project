@@ -309,26 +309,31 @@ For binning schemes I settled on 32:
 bins=32
 
 Within train_svm.py I messed around with the SVM kernels available in scikit:
-linear,rbf,sigmoid
+(linear,rbf,sigmoid)
 
 Some other ideas would be to use some different Classifiers in scikit like ExtraTrees or GradientBoosting:
-
+```python
 clf = ExtraTreesClassifier(n_estimators=10, max_depth=None,
                            min_samples_split=2, random_state=0)
                            
 clf = GradientBoostingClassifier(n_estimators=10, learning_rate=1.0,
                                  max_depth=1, random_state=0).fit(X_train, y_train)
+```
+If I have time I will come back to this point and play with ExtraTrees and GradientBoosting, but for now I have a good classification system going.
 
-Here is an example of how to include an image in your writeup.
-
-![demo-1](https://user-images.githubusercontent.com/20687560/28748231-46b5b912-7467-11e7-8778-3095172b7b19.png)
 
 ### Pick and Place Setup
 
 #### 1. For all three tabletop setups (`test*.world`), perform object recognition, then read in respective pick list (`pick_list_*.yaml`). Next construct the messages that would comprise a valid `PickPlace` request output them to `.yaml` format.
 
-And here's another image! 
-![demo-2](https://user-images.githubusercontent.com/20687560/28748286-9f65680e-7468-11e7-83dc-f1a32380b89c.png)
+Plugging everything we built into the project.py file I'll start out by changing the subscriber to the camera data (point cloud) topic /pr2/world/points
+
+```python
+# Create Subscriber for camera data (point cloud) from topic /pr2/world/points
+pcl_sub = rospy.Subscriber("/pr2/world/points", pc2.PointCloud2, pcl_callback, queue_size=1)
+```
+
+Check out that everything is working in RViz.
 
 Spend some time at the end to discuss your code, what techniques you used, what worked and why, where the implementation might fail and how you might improve it if you were going to pursue this project further.
 
