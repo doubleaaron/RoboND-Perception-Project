@@ -76,7 +76,7 @@ Implementation of Image Recognition Pipeline:
     
     C. Apply a Pass Through Filter to isolate the table and objects. Pass Through Filtering trims down our point cloud space along specified axes, in order to decrease the sample size. We will allow a specific region (ROI) to Pass Through. Pass Through Filtering can be thought of as cropping a 3 dimensional space. I found a min/max of 0.6 and 1.1 to work fairly well for the table top.
     
-    ![passthroughfilter](https://github.com/doubleaaron/RoboND-Perception-Project/blob/master/images/statistical-outlier-removal-cropped.png)
+    ![passthroughfilter](https://github.com/doubleaaron/RoboND-Perception-Project/blob/master/images/pass_through_filtering.png)
     
     ```python
     # PassThrough Filter
