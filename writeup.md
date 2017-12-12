@@ -111,6 +111,15 @@ Implementation of Image Recognition Pipeline:
     # Set the model you wish to fit 
     seg.set_model_type(pcl.SACMODEL_PLANE)
     seg.set_method_type(pcl.SAC_RANSAC)
+    
+    # Max distance for a point to be considered fitting the model
+    # Experiment with different values for max_distance 
+    # for segmenting the table
+    max_distance = 0.01
+    seg.set_distance_threshold(max_distance)
+
+    # Call the segment function to obtain set of inlier indices and model coefficients
+    inliers, coefficients = seg.segment()
     ```
 
     E. Use the ExtractIndices Filter to create new point clouds containing the table and objects separately (I'll call them cloud_table and cloud_objects going forward).
