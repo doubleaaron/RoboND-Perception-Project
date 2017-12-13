@@ -333,7 +333,62 @@ Plugging everything we built into the project.py file I'll start out by changing
 pcl_sub = rospy.Subscriber("/pr2/world/points", pc2.PointCloud2, pcl_callback, queue_size=1)
 ```
 
-Check out that everything is working in RViz.
+Save your PickPlace requests into output_1.yaml, output_2.yaml, and output_3.yaml for each scene respectively.
+
+In the launch file: pick_place_project.launch in pr2_robot/launch at lines 13 and 39 have world parameters you need to alter.
+
+Initialize variables
+```python
+    dict_list = []
+    labels = []
+    centroids = []
+    object_list_param = []
+    dropbox_param = []
+    pick_position = []
+    dropbox_position = []
+
+    test_scene_num = Int32()
+    object_name = String()
+    arm_name = String()
+    pick_pose = Pose()
+    place_pose = Pose()
+    test_scene_num.data = 3
+```
+Get/Read parameters
+```python
+    object_list_param = rospy.get_param('/object_list')
+    dropbox_param = rospy.get_param('/dropbox')
+```
+# TODO: Parse parameters into individual variables
+
+# TODO: Rotate PR2 in place to capture side tables for the collision map
+
+# TODO: Loop through the pick list
+
+# TODO: Get the PointCloud for a given object and obtain it's centroid
+
+# TODO: Create 'place_pose' for the object
+
+# TODO: Assign the arm to be used for pick_place
+
+# TODO: Create a list of dictionaries (made with make_yaml_dict()) for later output to yaml format
+
+# Wait for 'pick_place_routine' service to come up
+rospy.wait_for_service('pick_place_routine')
+
+try:
+pick_place_routine = rospy.ServiceProxy('pick_place_routine', PickPlace)
+
+# TODO: Insert your message variables to be sent as a service request
+resp = pick_place_routine(TEST_SCENE_NUM, OBJECT_NAME, WHICH_ARM, PICK_POSE, PLACE_POSE)
+
+print ("Response: ",resp.success)
+
+except rospy.ServiceException, e:
+print "Service call failed: %s"%e
+
+# TODO: Output your request parameters into output yaml file
+
 
 Spend some time at the end to discuss your code, what techniques you used, what worked and why, where the implementation might fail and how you might improve it if you were going to pursue this project further.
 
