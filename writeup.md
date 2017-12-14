@@ -326,6 +326,11 @@ If I have time I will come back to this point and play with ExtraTrees and Gradi
 
 #### 1. For all three tabletop setups (`test*.world`), perform object recognition, then read in respective pick list (`pick_list_*.yaml`). Next construct the messages that would comprise a valid `PickPlace` request output them to `.yaml` format.
 
+PR2 Models trained on Perception Pipeline:
+
+![tconfusionmatrix01](https://github.com/doubleaaron/RoboND-Perception-Project/blob/master/images/pr2_trained_confusion_matrix_01.jpg)
+![tconfusionmatrix02](https://github.com/doubleaaron/RoboND-Perception-Project/blob/master/images/pr2_trained_confusion_matrix_02.jpg)
+
 Plugging everything we built into the project.py file I'll start out by changing the subscriber to the camera data (point cloud) topic /pr2/world/points
 
 ```python
