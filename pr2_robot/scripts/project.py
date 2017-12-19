@@ -93,31 +93,50 @@ def pcl_callback(pcl_msg):
     #axis_max = 3.6
     passthroughX.set_filter_limits(axis_min, axis_max)
     cloud_filtered = passthroughX.filter()
+
 # RANSAC Plane Segmentation
+# Max distance for a point to be considered fitting the model
+# Experiment with different values for max_distance
+# for segmenting the table
     seg = cloud_filtered.make_segmenter()
     seg.set_model_type(pcl.SACMODEL_PLANE)
     seg.set_method_type(pcl.SAC_RANSAC)
-    max_distance = 0.0075
+    max_distance = 0.008
     seg.set_distance_threshold(max_distance)
+
 # Extract inliers and outliers
     inliers, coefficients = seg.segment()
     extracted_inliers = cloud_filtered.extract(inliers, negative=False)
     extracted_outliers = cloud_filtered.extract(inliers, negative=True)
     cloud_table = extracted_inliers
     cloud_objects = extracted_outliers
+
 # Euclidean Clustering
     white_cloud = XYZRGB_to_XYZ(cloud_objects)
-# Create Cluster-Mask Point Cloud to visualize each cluster separately
     tree = white_cloud.make_kdtree()
+
+# Create Cluster-Mask Point Cloud to visualize each cluster separately
+# Create a cluster extraction object
     ec = white_cloud.make_EuclideanClusterExtraction()
-# Convert PCL data to ROS messages
+
+# Set tolerances for distance threshold
+# as well as minimum and maximum cluster size (in points)
+
+# Your task is to experiment and find values that work for segmenting objects.
     ec.set_ClusterTolerance(0.0500)
     ec.set_MinClusterSize(50)
     ec.set_MaxClusterSize(5000)
+
+    # Search the k-d tree for clusters
     ec.set_SearchMethod(tree)
+
+    # Extract indices for each of the discovered clusters
     cluster_indices = ec.Extract()
-    #Assign a color corresponding to each segmented object in scene
+
+    # Create a Cluster Visualization using PointCloud_PointXYZRGB
+    # Create Cluster-Mask Point Cloud to visualize each cluster separately
     cluster_color = get_color_list(len(cluster_indices))
+
     color_cluster_point_list = []
 
     for j, indices in enumerate(cluster_indices):
