@@ -352,8 +352,6 @@ Identifying items in each Test World:
 
 I would like to work on the PR2 movement challenge but I have run out of time. In the future I will come back to this and complete it.
 
-Spend some time at the end to discuss your code, what techniques you used, what worked and why, where the implementation might fail and how you might improve it if you were going to pursue this project further.
-
 In this project I was able to filter noise out of RGBD sensor data, downsample the point cloud, segment areas out of the scene that weren't wanted, separate objects out for identification, cluster objects and color mark them as well as train a Support Vector Machine to correctly identify objects with very high accuracy and label those objects in the PR2 robot's camera and display in RVIZ.
 
 I'd like to continue the pick and place challenge but I don't have enough time. It would also be nice to test this on my RGBD Kinect sensor at some point.
