@@ -59,7 +59,7 @@ def pcl_callback(pcl_msg):
     # Set the number of neighboring points to analyze for any given point
     outlier_filter.set_mean_k(5)
     # Set threshold scale factor
-    x = 0.000000001
+    x = 0.00000001
     # Any point with a mean distance larger than global (mean distance+x*std_dev) will be considered outlier
     outlier_filter.set_std_dev_mul_thresh(x)
     # Finally call the filter function for magic
@@ -68,7 +68,7 @@ def pcl_callback(pcl_msg):
 
 # Voxel Grid Downsampling
     vox = msg_to_pcl.make_voxel_grid_filter()
-    LEAF_SIZE = 0.006
+    LEAF_SIZE = 0.005
     vox.set_leaf_size(LEAF_SIZE, LEAF_SIZE, LEAF_SIZE)
     cloud_filtered = vox.filter()
 
@@ -77,7 +77,7 @@ def pcl_callback(pcl_msg):
     passthroughZ = cloud_filtered.make_passthrough_filter()
     filter_axis = 'z'
     passthroughZ.set_filter_field_name(filter_axis)
-    axis_min = 0.598
+    axis_min = 0.6
     axis_max = 1.1
     # axis_min = 0.1
     # axis_max = 0.7
@@ -87,8 +87,10 @@ def pcl_callback(pcl_msg):
     passthroughX = cloud_filtered.make_passthrough_filter()
     filter_axis = 'x'
     passthroughX.set_filter_field_name(filter_axis)
-    axis_min = 0.35
-    axis_max = 3.6
+    axis_min = 0.4
+    axis_max = 3.5
+    #axis_min = 0.3
+    #axis_max = 3.6
     passthroughX.set_filter_limits(axis_min, axis_max)
     cloud_filtered = passthroughX.filter()
 # RANSAC Plane Segmentation
