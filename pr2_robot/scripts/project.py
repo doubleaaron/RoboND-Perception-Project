@@ -234,7 +234,7 @@ def pr2_mover(object_list):
         arm_name = String()
         if i['group'] == 'red':
             arm_name.data = 'left'
-        elif i['group'] == 'green':
+        else i['group'] == 'green':
             arm_name.data = 'right'
 
         # Get the PointCloud for a given object and obtain it's centroid
@@ -244,12 +244,12 @@ def pr2_mover(object_list):
                 labels.append(obj.label)
                 points_arr = ros_to_pcl(obj.cloud).to_array()
 
-                object_centroid = np.mean(points_arr, axis=0)[:3]
-                centroids.append(object_centroid)
+                object_centroids = np.mean(points_arr, axis=0)[:3]
+                centroids.append(object_centroids)
 
-                pick_pose.position.x = np.asscalar(object_centroid[0])
-                pick_pose.position.y = np.asscalar(object_centroid[1])
-                pick_pose.position.z = np.asscalar(object_centroid[2])
+                pick_pose.position.x = np.asscalar(object_centroids[0])
+                pick_pose.position.y = np.asscalar(object_centroids[1])
+                pick_pose.position.z = np.asscalar(object_centroids[2])
 
         # Create 'place_pose' for the object
         for k in dropbox_param:
